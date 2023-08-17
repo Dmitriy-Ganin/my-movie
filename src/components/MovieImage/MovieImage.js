@@ -2,9 +2,9 @@ import React from 'react'
 import { Space } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import PropTypes from 'prop-types'
-import './FilmImage.css'
+import './MovieImage.css'
 
-export default class FilmImage extends React.Component {
+export default class MovieImage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -54,10 +54,10 @@ export default class FilmImage extends React.Component {
   }
 }
 
-FilmImage.defaultProps = {
+MovieImage.defaultProps = {
   posterPath: null,
 }
 
-FilmImage.propTypes = {
+MovieImage.propTypes = {
   posterPath: PropTypes.string,
 }

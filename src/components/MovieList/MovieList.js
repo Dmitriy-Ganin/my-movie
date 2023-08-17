@@ -2,10 +2,10 @@ import React from 'react'
 import { Pagination, Space, Spin } from 'antd'
 import PropTypes from 'prop-types'
 
-import FilmCard from '../FilmCard/FilmCard'
-import './FilmList.css'
+import MovieCard from '../MovieCard'
+import './MovieList.css'
 
-export default class FilmList extends React.Component {
+export default class MovieList extends React.Component {
   renderList = () => {
     const { filmList, onChangeRate, ratedFilms } = this.props
 
@@ -18,7 +18,7 @@ export default class FilmList extends React.Component {
     }
 
     return filmList.map((film) => (
-      <FilmCard
+      <MovieCard
         key={film.id}
         film={film}
         id={film.id}
@@ -32,7 +32,7 @@ export default class FilmList extends React.Component {
     const { totalResults, onChangePage, currentPage } = this.props
     return (
       <React.Fragment>
-        <ul className="film-list">{this.renderList()}</ul>
+        <ul className="movie-list">{this.renderList()}</ul>
         <Pagination
           className="pagination"
           current={currentPage}
@@ -46,12 +46,12 @@ export default class FilmList extends React.Component {
   }
 }
 
-FilmList.defaultProps = {
+MovieList.defaultProps = {
   filmList: null,
   totalResults: 0,
 }
 
-FilmList.propTypes = {
+MovieList.propTypes = {
   filmList: PropTypes.arrayOf(PropTypes.shape({})),
   totalResults: PropTypes.number,
   currentPage: PropTypes.number.isRequired,

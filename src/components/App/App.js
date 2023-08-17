@@ -4,9 +4,9 @@ import _debounce from 'lodash/debounce'
 import { Offline, Online } from 'react-detect-offline'
 
 import MovieService from '../../services/MovieService'
-import FilmList from '../FilmList/FilmList'
-import GenresContext from '../GenresContext/GenresContext'
-import ErrorIndicator from '../ErrorIndicator/ErrorIndicator'
+import MovieList from '../MovieList'
+import GenresContext from '../GenresContext/'
+import ErrorSignal from '../ErrorSignal'
 import './App.css'
 
 export default class App extends React.Component {
@@ -204,14 +204,14 @@ export default class App extends React.Component {
       error,
     } = this.state
     const hasData = !(loading || error)
-    const errorIndicator = error ? <ErrorIndicator text={error} /> : null
+    const errorSignal = error ? <ErrorSignal text={error} /> : null
     const spinner = loading ? (
       <Space size="middle">
         <Spin size="large" />
       </Space>
     ) : null
     const content = hasData ? (
-      <FilmList
+      <MovieList
         filmList={filmList}
         fetchSearchFilm={fetchSearchFilm}
         currentPage={currentPage}
@@ -237,7 +237,7 @@ export default class App extends React.Component {
                 ref={this.textInput}
               />
             </form>
-            {errorIndicator}
+            {errorSignal}
             {spinner}
             {content}
           </div>
@@ -248,7 +248,7 @@ export default class App extends React.Component {
         key: 'rated',
         children: (
           <div className="wrapper">
-            {errorIndicator}
+            {errorSignal}
             {spinner}
             {content}
           </div>

@@ -1,12 +1,12 @@
 import { Alert } from 'antd'
 import PropTypes from 'prop-types'
 
-function ErrorIndicator({ text }) {
+function ErrorSignal({ text }) {
   return <Alert message="Error" description={text} type="error" showIcon />
 }
 
-export default ErrorIndicator
+export default ErrorSignal
 
-ErrorIndicator.propTypes = {
+ErrorSignal.propTypes = {
   text: PropTypes.string.isRequired,
 }

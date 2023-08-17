@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
-import './RateCircle.css'
+import './СircleСolor.css'
 
-function RateCircle({ percent }) {
+function СircleСolor({ percent }) {
   const color = () => {
-    const className = 'rate-circle'
+    const className = 'circle-color'
     if (percent < 3) return `${className} ${className}__red`
     if (percent < 5) return `${className} ${className}__orange`
     if (percent < 7) return `${className} ${className}__yellow`
@@ -17,8 +17,8 @@ function RateCircle({ percent }) {
   )
 }
 
-export default RateCircle
+export default СircleСolor
 
-RateCircle.propTypes = {
+СircleСolor.propTypes = {
   percent: PropTypes.number.isRequired,
 }

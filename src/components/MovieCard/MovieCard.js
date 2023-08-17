@@ -2,15 +2,15 @@ import React from 'react'
 import { Tag, Rate, Space, Spin, Typography } from 'antd'
 import PropTypes from 'prop-types'
 
-import RateCircle from '../RateCircle/RateCircle'
-import ErrorIndicator from '../ErrorIndicator/ErrorIndicator'
-import FilmImage from '../FilmImage/FilmImage'
-import GenresContext from '../GenresContext/GenresContext'
-import './FilmCard.css'
+import СircleСolor from '../СircleСolor'
+import ErrorSignal from '../ErrorSignal'
+import MovieImage from '../MovieImage'
+import GenresContext from '../GenresContext'
+import './MovieCard.css'
 
 const { Paragraph } = Typography
 
-export default class FilmCard extends React.Component {
+export default class MovieCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -43,7 +43,7 @@ export default class FilmCard extends React.Component {
       overview,
     } = film
     const hasData = !(loading || error)
-    const errorMsg = error ? <ErrorIndicator text="Film did not load" /> : null
+    const errorMsg = error ? <ErrorSignal text="Film did not load" /> : null
     const spinner = loading ? (
       <Space size="middle">
         <Spin size="large" />
@@ -51,11 +51,11 @@ export default class FilmCard extends React.Component {
     ) : null
     const content = hasData ? (
       <React.Fragment>
-        <FilmImage posterPath={posterPath} />
+        <MovieImage posterPath={posterPath} />
         <div className="card__header">
           <span className="card__title">
             <span className="card__title-text">{title}</span>
-            <RateCircle percent={voteAverage} />
+            <СircleСolor percent={voteAverage} />
           </span>
           <span className="card__date">{releaseDate}</span>
           <GenresContext.Consumer>
@@ -79,13 +79,13 @@ export default class FilmCard extends React.Component {
   }
 }
 
-FilmCard.contextType = GenresContext
+MovieCard.contextType = GenresContext
 
-FilmCard.defaultProps = {
+MovieCard.defaultProps = {
   rating: 0,
 }
 
-FilmCard.propTypes = {
+MovieCard.propTypes = {
   film: PropTypes.shape({
     title: PropTypes.string.isRequired,
     release_date: PropTypes.string.isRequired,
