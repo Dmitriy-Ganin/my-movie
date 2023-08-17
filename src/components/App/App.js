@@ -3,7 +3,7 @@ import { Input, Tabs, Spin, Space, Modal } from 'antd'
 import _debounce from 'lodash/debounce'
 import { Offline, Online } from 'react-detect-offline'
 
-import MovieService from '../../services/MovieService'
+import MovieService from '../../services'
 import MovieList from '../MovieList'
 import GenresContext from '../GenresContext/'
 import ErrorSignal from '../ErrorSignal'
