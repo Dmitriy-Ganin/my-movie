@@ -10,11 +10,12 @@ import ErrorSignal from '../ErrorSignal'
 import './App.css'
 
 export default class App extends React.Component {
+  // задержка запроса на сервер
   movieService = new MovieService()
   searchFilmDebounce = _debounce(() => {
     const { searchFilm } = this.state
     this.setState({
-      fetchSearchFilm: searchFilm,
+      apiSearchFilm: searchFilm,
     })
   }, 1000)
 
@@ -22,7 +23,7 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       searchFilm: null,
-      fetchSearchFilm: 'return',
+      apiSearchFilm: 'return',
       filmList: null,
       currentPage: 1,
       totalResults: null,
@@ -44,8 +45,8 @@ export default class App extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { currentTab, currentPage, fetchSearchFilm } = this.state
-    if (prevState.fetchSearchFilm !== fetchSearchFilm) {
+    const { currentTab, currentPage, apiSearchFilm } = this.state
+    if (prevState.apiSearchFilm !== apiSearchFilm) {
       this.setState({
         currentPage: 1,
       })
@@ -71,6 +72,7 @@ export default class App extends React.Component {
     }
   }
 
+  // поисковое слово
   onChangeSearch = (evt) => {
     this.setState({
       searchFilm: evt.target.value,
@@ -88,12 +90,14 @@ export default class App extends React.Component {
     })
   }
 
+  // вкладки
   onChangeTab = (tab) => {
     this.setState({
       currentTab: tab,
     })
   }
 
+  // рейтинг кино...запрос на сервер и обратно
   onChangeRate = (rate, id) => {
     const { guestSessionId } = this.state
     this.movieService
@@ -117,6 +121,7 @@ export default class App extends React.Component {
     console.log(err)
   }
 
+  // фильмы
   getFilmsList(serviceFunc) {
     console.log(serviceFunc)
     this.setState({
@@ -141,21 +146,23 @@ export default class App extends React.Component {
   }
 
   getFilms = () => {
-    const { fetchSearchFilm, currentPage } = this.state
+    const { apiSearchFilm, currentPage } = this.state
     const { getSearch, getPopular } = this.movieService
-    if (fetchSearchFilm) {
-      this.getFilmsList(() => getSearch(fetchSearchFilm, currentPage))
+    if (apiSearchFilm) {
+      this.getFilmsList(() => getSearch(apiSearchFilm, currentPage))
     } else {
       this.getFilmsList(() => getPopular(currentPage))
     }
   }
 
+  // оценёные фильмы
   getRatedFilms = () => {
     const { guestSessionId, currentPage } = this.state
     const { getRated } = this.movieService
     this.getFilmsList(() => getRated(guestSessionId, currentPage))
   }
 
+  // создание сессии
   createGuestSession() {
     if (Date.parse(localStorage.getItem('expires_at')) < Date.now() || !localStorage.getItem('expires_at')) {
       try {
@@ -191,18 +198,8 @@ export default class App extends React.Component {
   }
 
   render() {
-    const {
-      filmList,
-      guestSessionId,
-      genresList,
-      searchFilm,
-      fetchSearchFilm,
-      totalResults,
-      currentPage,
-      ratedFilms,
-      loading,
-      error,
-    } = this.state
+    const { filmList, guestSessionId, genresList, searchFilm, totalResults, currentPage, ratedFilms, loading, error } =
+      this.state
     const hasData = !(loading || error)
     const errorSignal = error ? <ErrorSignal text={error} /> : null
     const spinner = loading ? (
@@ -213,7 +210,6 @@ export default class App extends React.Component {
     const content = hasData ? (
       <MovieList
         filmList={filmList}
-        fetchSearchFilm={fetchSearchFilm}
         currentPage={currentPage}
         onChangePage={this.onChangePage}
         onChangeRate={this.onChangeRate}
