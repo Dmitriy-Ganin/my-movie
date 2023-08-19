@@ -3,11 +3,16 @@ import { Pagination, Space, Spin } from 'antd'
 import PropTypes from 'prop-types'
 
 import MovieCard from '../MovieCard'
+import ErrorSignal from '../ErrorSignal'
 import './MovieList.css'
 
 export default class MovieList extends React.Component {
   renderList = () => {
-    const { filmList, onChangeRate, ratedFilms } = this.props
+    const { filmList, onChangeRate, ratedFilms, apiSearchFilm, currentTab } = this.props
+
+    if (filmList.length === 0 && apiSearchFilm !== '' && currentTab == 'search') {
+      return <ErrorSignal text="No movies found for your search" />
+    }
 
     if (!filmList) {
       return (
@@ -37,9 +42,9 @@ export default class MovieList extends React.Component {
           className="pagination"
           current={currentPage}
           onChange={onChangePage}
-          pageSize={10}
+          pageSize={20}
           showSizeChanger={false}
-          total={totalResults > 10000 ? 10000 : totalResults}
+          total={totalResults}
         />
       </React.Fragment>
     )

@@ -4,6 +4,8 @@ import { LoadingOutlined } from '@ant-design/icons'
 import PropTypes from 'prop-types'
 import './MovieImage.css'
 
+import noImage from '../../assets/NoImage.png'
+
 export default class MovieImage extends React.Component {
   constructor(props) {
     super(props)
@@ -28,7 +30,7 @@ export default class MovieImage extends React.Component {
         onLoad={this.isLoaded}
         className={`card__poster${posterPath ? ' card__poster--loaded' : ''}`}
         alt="Film poster"
-        src={posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : '/NoImage.png'}
+        src={posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : noImage}
       />
     )
 

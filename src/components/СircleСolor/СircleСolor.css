@@ -9,16 +9,16 @@
   flex-shrink: 0;
 }
 
-.circle-color__red {
-  border-color: #e90000;
+.circle-color__yellow {
+  border-color: #e9d100;
 }
 
 .circle-color__orange {
   border-color: #e97e00;
 }
 
-.circle-color__yellow {
-  border-color: #e9d100;
+.circle-color__red {
+  border-color: #e90000;
 }
 
 .circle-color__green {

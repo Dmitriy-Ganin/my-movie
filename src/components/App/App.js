@@ -22,9 +22,9 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      searchFilm: null,
+      searchFilm: 'return',
       apiSearchFilm: 'return',
-      filmList: null,
+      filmList: [],
       currentPage: 1,
       totalResults: null,
       loading: false,
@@ -118,28 +118,21 @@ export default class App extends React.Component {
       error: err.message,
       loading: false,
     })
-    console.log(err)
   }
 
   // фильмы
   getFilmsList(serviceFunc) {
-    console.log(serviceFunc)
     this.setState({
       loading: true,
     })
     try {
-      serviceFunc()
-        .then((listFilm) => {
-          console.log(listFilm)
-          this.setState({
-            filmList: listFilm.results,
-            totalResults: listFilm.total_results,
-            loading: false,
-          })
+      serviceFunc().then((listFilm) => {
+        this.setState({
+          filmList: listFilm.results,
+          totalResults: listFilm.total_results,
+          loading: false,
         })
-        .catch((err) => {
-          this.onError(err)
-        })
+      })
     } catch (err) {
       this.onError(err)
     }
@@ -197,9 +190,40 @@ export default class App extends React.Component {
     })
   }
 
+  networkError = (err) => {
+    Modal.destroyAll()
+    if (!err) {
+      Modal.error({
+        title: 'No internet connection',
+        content: 'No internet connection',
+      })
+    } else {
+      Modal.success({
+        content: 'Successfull connection',
+      })
+    }
+  }
+
+  polling = {
+    enabled: true,
+    url: 'www.themoviedb.org/',
+  }
+
   render() {
-    const { filmList, guestSessionId, genresList, searchFilm, totalResults, currentPage, ratedFilms, loading, error } =
-      this.state
+    const {
+      filmList,
+      guestSessionId,
+      genresList,
+      searchFilm,
+      apiSearchFilm,
+      totalResults,
+      currentPage,
+      ratedFilms,
+      loading,
+      error,
+      currentTab,
+      polling,
+    } = this.state
     const hasData = !(loading || error)
     const errorSignal = error ? <ErrorSignal text={error} /> : null
     const spinner = loading ? (
@@ -210,12 +234,14 @@ export default class App extends React.Component {
     const content = hasData ? (
       <MovieList
         filmList={filmList}
+        apiSearchFilm={apiSearchFilm}
         currentPage={currentPage}
         onChangePage={this.onChangePage}
         onChangeRate={this.onChangeRate}
         totalResults={totalResults}
         guestSessionId={guestSessionId}
         ratedFilms={ratedFilms}
+        currentTab={currentTab}
       />
     ) : null
 
@@ -252,25 +278,6 @@ export default class App extends React.Component {
       },
     ]
 
-    const networkError = (err) => {
-      Modal.destroyAll()
-      if (!err) {
-        Modal.error({
-          title: 'No internet connection',
-          content: 'No internet connection',
-        })
-      } else {
-        Modal.success({
-          content: 'Successfull connection',
-        })
-      }
-    }
-
-    const polling = {
-      enabled: true,
-      url: 'www.themoviedb.org/',
-    }
-
     return (
       <React.Fragment>
         <Online polling={polling}>
@@ -280,7 +287,7 @@ export default class App extends React.Component {
             </div>
           </GenresContext.Provider>
         </Online>
-        <Offline polling={polling} onChange={networkError} />
+        <Offline polling={polling} onChange={this.networkError} />
       </React.Fragment>
     )
   }
