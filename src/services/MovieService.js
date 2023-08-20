@@ -1,10 +1,19 @@
 export default class MovieService {
-  _baseUrl = 'https://api.themoviedb.org/3'
+  _baseUrl = new URL('https://api.themoviedb.org/3/')
 
-  _api = 'api_key=86d09f01f475fea7688e5264f0387a13'
+  _apiKey = '86d09f01f475fea7688e5264f0387a13'
+
+  options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization:
+        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4NmQwOWYwMWY0NzVmZWE3Njg4ZTUyNjRmMDM4N2ExMyIsInN1YiI6IjY0Y2ZjZjYwMzAzYzg1MDEzYTE1NjNkNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TBfvN2ZIvGZ6zdc2QMRpevlkfELA3C0izYXOPL6kX74',
+    },
+  }
 
   async getResource(url) {
-    const result = await fetch(`${this._baseUrl}${url}`)
+    const result = await fetch(url)
     if (!result.ok) {
       throw new Error(`Error ${url}, status: ${result.status}`)
     }
@@ -13,24 +22,31 @@ export default class MovieService {
   }
 
   getPopular = async (page) => {
-    const result = await this.getResource(`/movie/popular?${this._api}&page=${page}`)
+    const url = new URL('movie/popular?', this._baseUrl)
+    url.searchParams.set('page', page)
+    const result = await this.getResource(url, this.options)
     return result
   }
 
   getSearch = async (query, page) => {
-    const result = await this.getResource(
-      `/search/movie?${this._api}&language=en-US&query=${query}&page=${page}&include_adult=false`
-    )
+    const url = new URL('search/movie?', this._baseUrl)
+    url.searchParams.set('query', query)
+    url.searchParams.set('page', page)
+    const result = await this.getResource(url, this.options)
     return result
   }
 
   getGenres = async () => {
-    const result = await this.getResource(`/genre/movie/list?${this._api}`)
+    const url = new URL('genre/movie/list', this._baseUrl)
+    url.searchParams.set('api_key', this._apiKey)
+    const result = await this.getResource(url, this.options)
     return result
   }
 
   createGuestSession = async () => {
-    const result = await this.getResource(`/authentication/guest_session/new?${this._api}`)
+    const url = new URL('authentication/guest_session/new?', this._baseUrl)
+    url.searchParams.set('api_key', this._apiKey)
+    const result = await this.getResource(url, this.options)
     return result
   }
 
@@ -38,24 +54,25 @@ export default class MovieService {
     const rate = {
       value: rateValue,
     }
-    const response = await fetch(
-      `${this._baseUrl}/movie/${filmId}/rating?guest_session_id=${guestSessionId}&${this._api}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-        },
-        body: JSON.stringify(rate),
-      }
-    )
+    const url = new URL(`movie/${filmId}/rating?`, this._baseUrl)
+    url.searchParams.set('api_key', this._apiKey)
+    url.searchParams.set('guest_session_id', guestSessionId)
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify(rate),
+    })
     const result = await response.json()
     return result
   }
 
   getRated = async (guestSessionId, page) => {
-    const result = await this.getResource(
-      `/guest_session/${guestSessionId}/rated/movies?${this._api}&language=en-US&sort_by=created_at.asc&page=${page}`
-    )
+    const url = new URL(`guest_session/${guestSessionId}/rated/movies?`, this._baseUrl)
+    url.searchParams.set('api_key', this._apiKey)
+    url.searchParams.set('page', page)
+    const result = await this.getResource(url, this.options)
     return result
   }
 }
