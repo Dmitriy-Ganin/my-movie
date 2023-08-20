@@ -72,7 +72,10 @@ export default class MovieService {
     const url = new URL(`guest_session/${guestSessionId}/rated/movies?`, this._baseUrl)
     url.searchParams.set('api_key', this._apiKey)
     url.searchParams.set('page', page)
-    const result = await this.getResource(url, this.options)
-    return result
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error(response.status)
+    }
+    return await response.json()
   }
 }
