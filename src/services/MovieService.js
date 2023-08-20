@@ -13,7 +13,7 @@ export default class MovieService {
   }
 
   async getResource(url) {
-    const result = await fetch(url)
+    const result = await fetch(url, this.options)
     if (!result.ok) {
       throw new Error(`Error ${url}, status: ${result.status}`)
     }
